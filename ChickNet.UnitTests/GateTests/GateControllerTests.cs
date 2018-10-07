@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using ChickNet.Gate;
-using Xunit;
+﻿using Xunit;
 
 namespace ChickNet.UnitTests.GateTests
 {
@@ -14,31 +12,19 @@ namespace ChickNet.UnitTests.GateTests
             const int otherGateNr = 2;
             const int gateNrToOpen = 3;
 
-            var mockSelector =
-                new MockSelectorBuilder()
-                    .WithSelected(otherGateNr)
-                    .Build();
+            var fixture = new GateControllerFixture();
+            var dut =
+                fixture
+                    .WithClosedGate(atNr: gateNrToOpen)
+                    .WithClosedGate(atNr: otherGateNr)
+                    .WithSelectedGate(otherGateNr)
+                    .NewDut();
 
-            var mockPwmController = new MockPwnController();
-                    
-
-            var mockGateStates =
-                new MockGateStatesBuilder()
-                    .WithGate(atNr: 2)
-                    .WithClosedGate(atNr: 3)
-                    .Build();
-            
-            var dut = new GateController(mockSelector, mockPwmController, mockGateStates);
-            
             // Act
             dut.OpenGate(gateNrToOpen);
 
             // Assert
-            Assert.True(mockSelector.SelectednrLastChangedTick 
-                <= mockPwmController
-                    .DutycycleHistory
-                        .Where(dce => dce.DutyCycle > 0) 
-                        .Min(dce => dce.Tick));
+            Assert.True(fixture.SelectednrLastChangedTick <= fixture.FirstNonZeroDutycycleChangeTick);
         }
     }
 }
