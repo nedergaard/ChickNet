@@ -95,6 +95,11 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gate\GateController.cs" />
+    <Compile Include="Gate\IGateState.cs" />
+    <Compile Include="Gate\IGateStates.cs" />
+    <Compile Include="Gate\IPwmController.cs" />
+    <Compile Include="Gate\ISelector.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
