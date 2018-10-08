@@ -1,4 +1,7 @@
-﻿namespace ChickNet.UnitTests.GateTests
+﻿using ChickNet.Gate;
+using Moq;
+
+namespace ChickNet.UnitTests.GateTests
 {
     public class MockSelectorBuilder
     {
@@ -16,13 +19,18 @@
             return this;
         }
 
-        public MockSelector Build()
+        public Mock<ISelector> Build()
         {
-            return
-                new MockSelector()
-                {
-                    SelectedNr = _selectedNr
-                };
+            var result = new Mock<ISelector>();
+            result
+                .SetupProperty(p => p.Selected, _selectedNr)
+                .Setup(p => p.Select(It.IsAny<int>()))
+                .Callback(
+                    (int nr) =>
+                    {
+                        result.SetupProperty(p => p.Selected, nr);
+                    });
+            return result;
         }
     }
-}
+}                                               

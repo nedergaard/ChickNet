@@ -7,7 +7,7 @@ namespace ChickNet.UnitTests.GateTests
         #region Implementation of IGateState
 
         /// <inheritdoc />
-        //        public bool IsOpen { get; set; }
+        public bool IsOpen { get; set; }
 
         /// <inheritdoc />
         public bool IsClosed { get; set; }

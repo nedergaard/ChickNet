@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Threading.Tasks;
+using Xunit;
 
 namespace ChickNet.UnitTests.GateTests
 {
@@ -6,7 +7,7 @@ namespace ChickNet.UnitTests.GateTests
     {
         // [UnitOfWork_StateUnderTest_ExpectedBehavior]
         [Fact]
-        public void OpenGate_GateClosed_SelectsGateBeforeActivatingMotor()
+        public async Task OpenGate_GateClosed_SelectsGateBeforeActivatingMotorAsync()
         {
             // Arrange
             const int otherGateNr = 2;
@@ -21,10 +22,12 @@ namespace ChickNet.UnitTests.GateTests
                     .NewDut();
 
             // Act
-            dut.OpenGate(gateNrToOpen);
+            await dut.OpenGateAsync(gateNrToOpen);
 
             // Assert
             Assert.True(fixture.SelectednrLastChangedTick <= fixture.FirstNonZeroDutycycleChangeTick);
         }
     }
+
+    // I am not writing more of these until I get Rx
 }

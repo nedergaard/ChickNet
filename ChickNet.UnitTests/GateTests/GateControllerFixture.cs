@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using ChickNet.Gate;
+using Moq;
 
 namespace ChickNet.UnitTests.GateTests
 {
     public class GateControllerFixture
     {
-        private MockSelector _selector;
+        private Mock<ISelector> _selector;
         private MockPwnController _pwmController;
         private MockGateStates _gateStates;
 
@@ -16,7 +17,7 @@ namespace ChickNet.UnitTests.GateTests
         /// <summary>
         /// Tick where a gate was last selected
         /// </summary>
-        public long? SelectednrLastChangedTick => _selector.SelectednrLastChangedTick;
+        public long? SelectednrLastChangedTick { get; private set; }
 
         /// <summary>
         /// Tick where the PwmController was first told to start.
@@ -60,7 +61,7 @@ namespace ChickNet.UnitTests.GateTests
             _pwmController = MockPwmController;
             _gateStates = GateStatesBuilder.Build();
 
-            return new GateController(_selector, _pwmController, _gateStates);
+            return new GateController(_selector.Object, _pwmController, _gateStates);
         }
     }
 }

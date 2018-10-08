@@ -12,5 +12,15 @@ namespace ChickNet.UnitTests.GateTests
         {
             _mockGateStates = mockGateStates.ToList();
         }
+
+        #region Implementation of IGateStates
+
+        /// <inheritdoc />
+        public IGateState GetStateOf(int gateNr)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        #endregion
     }
 }
