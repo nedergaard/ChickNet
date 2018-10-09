@@ -6,9 +6,9 @@ namespace ChickNet.UnitTests.GateTests
 {
     public class GateControllerFixture
     {
-        private Mock<ISelector> _selector;
+        private MockSelector _selector;
         private MockPwnController _pwmController;
-        private MockGateStates _gateStates;
+        private Mock<IGateStates> _gateStates;
 
         public MockSelectorBuilder SelectorBuilder { get; }
         public MockPwnController MockPwmController { get; }
@@ -61,7 +61,7 @@ namespace ChickNet.UnitTests.GateTests
             _pwmController = MockPwmController;
             _gateStates = GateStatesBuilder.Build();
 
-            return new GateController(_selector.Object, _pwmController, _gateStates);
+            return new GateController(_selector, _pwmController, _gateStates.Object);
         }
     }
 }

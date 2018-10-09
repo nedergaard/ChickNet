@@ -4,6 +4,8 @@ namespace ChickNet.UnitTests.GateTests
 {
     public class MockGateState : IGateState
     {
+        public int GateNr { get; set; }
+
         #region Implementation of IGateState
 
         /// <inheritdoc />

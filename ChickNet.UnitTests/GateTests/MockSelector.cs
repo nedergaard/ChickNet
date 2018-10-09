@@ -11,7 +11,7 @@ namespace ChickNet.UnitTests.GateTests
         #region Implementation of ISelector
 
         /// <inheritdoc />
-        public int Selected { get; }
+        public int Selected { get; set; }
 
         /// <inheritdoc />
         public void Select(int itemNr)

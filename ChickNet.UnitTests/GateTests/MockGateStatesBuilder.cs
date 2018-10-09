@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using ChickNet.Gate;
+using Moq;
 
 namespace ChickNet.UnitTests.GateTests
 {
@@ -13,7 +16,7 @@ namespace ChickNet.UnitTests.GateTests
 
         public MockGateStatesBuilder WithGate(int atNr)
         {
-            _gates.Add(new MockGateBuilder().Build());
+            WithClosedGate(atNr);
 
             return this;
         }
@@ -22,15 +25,20 @@ namespace ChickNet.UnitTests.GateTests
         {
             _gates.Add(
                 new MockGateBuilder()
-                    .WithGateOpen()
+                    .WithGateNr(atNr)
+                    .WithGateClosed()
                     .Build());
 
             return this;
         }
 
-        public MockGateStates Build()
+        public Mock<IGateStates> Build()
         {
-            return new MockGateStates(_gates);            
+            var result = new Mock<IGateStates>();
+            result
+                .Setup(m => m.GetStateOf(It.IsAny<int>()))
+                .Returns((int nr) => _gates.FirstOrDefault(gate => gate.GateNr == nr));
+            return result;
         }
     }
 }

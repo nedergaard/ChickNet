@@ -19,18 +19,13 @@ namespace ChickNet.UnitTests.GateTests
             return this;
         }
 
-        public Mock<ISelector> Build()
+        public MockSelector Build()
         {
-            var result = new Mock<ISelector>();
-            result
-                .SetupProperty(p => p.Selected, _selectedNr)
-                .Setup(p => p.Select(It.IsAny<int>()))
-                .Callback(
-                    (int nr) =>
-                    {
-                        result.SetupProperty(p => p.Selected, nr);
-                    });
-            return result;
+            return 
+                new MockSelector()
+                {
+                    SelectedNr = _selectedNr
+                };
         }
     }
 }                                               
