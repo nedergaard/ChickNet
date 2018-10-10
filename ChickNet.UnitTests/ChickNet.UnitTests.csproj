@@ -105,6 +105,8 @@
     <Compile Include="GateTests\MockSelector.cs" />
     <Compile Include="GateTests\MockSelectorBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectionTests\FakePin.cs" />
+    <Compile Include="SelectionTests\SelectorTests.cs" />
     <Compile Include="UnitTestApp.xaml.cs">
       <DependentUpon>UnitTestApp.xaml</DependentUpon>
     </Compile>
@@ -154,6 +156,7 @@
       <Name>ChickNet</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
