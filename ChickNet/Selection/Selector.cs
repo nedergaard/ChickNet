@@ -21,12 +21,17 @@ namespace ChickNet.Selection
         #region Implementation of ISelector
 
         /// <inheritdoc />
-        public int Selected { get; }
+        public int Selected { get; private set; }
 
         /// <inheritdoc />
         public void Select(int itemNr)
         {
-            
+            for (var pinIndex = 0; pinIndex < _pins.Count; pinIndex++)
+            {
+                _pins[pinIndex].Write((1 << pinIndex & itemNr) > 0 ? GpioPinValue.High : GpioPinValue.Low);
+            }
+
+            Selected = itemNr;
         }
 
         #endregion
