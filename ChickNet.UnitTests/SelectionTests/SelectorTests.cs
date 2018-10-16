@@ -37,7 +37,7 @@ namespace ChickNet.UnitTests.SelectionTests
 
             // Assert
             fixture.OutputPins.Should()
-                .BeEquivalentTo(expected);
+                .BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
 
         [Theory]
