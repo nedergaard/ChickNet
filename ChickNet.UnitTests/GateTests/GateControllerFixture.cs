@@ -17,7 +17,7 @@ namespace ChickNet.UnitTests.GateTests
         /// <summary>
         /// Tick where a gate was last selected
         /// </summary>
-        public long? SelectednrLastChangedTick { get; private set; }
+        public long? SelectednrLastChangedTick => _selector.SelectednrLastChangedTick;
 
         /// <summary>
         /// Tick where the PwmController was first told to start.
@@ -30,7 +30,8 @@ namespace ChickNet.UnitTests.GateTests
                     _pwmController
                         .DutycycleHistory
                         .Where(dce => dce.DutyCycle > 0)
-                        .Min(dce => dce.Tick);
+                        .DefaultIfEmpty()
+                        .Min(dce => dce?.Tick);
             }
         }
             

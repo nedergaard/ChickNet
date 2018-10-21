@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ChickNet.Gate;
 
 namespace ChickNet.UnitTests.GateTests
@@ -22,7 +23,7 @@ namespace ChickNet.UnitTests.GateTests
         public int DutyCycle { get; }
 
         /// <inheritdoc />
-        public void ChangeDutyCycleTo(int percent)
+        public Task ChangeDutyCycleAsync(int percent)
         {
             DutycycleHistory.Add(
                 new DutyCycleChangeEvent
@@ -30,6 +31,13 @@ namespace ChickNet.UnitTests.GateTests
                     Tick = DateTime.Now.Ticks,
                     DutyCycle = percent,
                 });
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task StopAsync()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

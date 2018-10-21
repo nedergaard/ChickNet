@@ -105,6 +105,7 @@
     <Compile Include="GateTests\MockSelector.cs" />
     <Compile Include="GateTests\MockSelectorBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PwmTests\PwmPinExtensionsTests.cs" />
     <Compile Include="SelectionTests\FakePin.cs" />
     <Compile Include="SelectionTests\SelectorTests.cs" />
     <Compile Include="UnitTestApp.xaml.cs">

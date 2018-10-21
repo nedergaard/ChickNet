@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
 
 namespace ChickNet.UnitTests.GateTests
@@ -24,8 +25,9 @@ namespace ChickNet.UnitTests.GateTests
             // Act
             await dut.OpenGateAsync(gateNrToOpen);
 
-            // Assert
-            Assert.True(fixture.SelectednrLastChangedTick <= fixture.FirstNonZeroDutycycleChangeTick);
+            // Assert we select the gate before starting to open it
+            fixture.SelectednrLastChangedTick.Should()
+                .BeLessOrEqualTo(fixture.FirstNonZeroDutycycleChangeTick ?? -1);
         }
     }
 

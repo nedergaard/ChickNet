@@ -100,10 +100,12 @@
     <Compile Include="Gate\IGateStates.cs" />
     <Compile Include="Gate\IPwmController.cs" />
     <Compile Include="Gate\ISelector.cs" />
+    <Compile Include="Pwm\PwmController.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Pwm\PwmPinExtensions.cs" />
     <Compile Include="Selection\GpioPinWrapper.cs" />
     <Compile Include="Selection\Selector.cs" />
   </ItemGroup>
@@ -138,6 +140,7 @@
       <Version>6.1.7</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
