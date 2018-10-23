@@ -14,8 +14,8 @@ namespace ChickNet.UnitTests.PwmTests
         public async Task ChangeDutyCycleInSteps_AtZero_AcceleratesInSteps()
         {
             // Arrange
-            var fixture = new PwmPinExtensionsFixture();
-            var mockPin = fixture.CreateFake();
+            var fixture = new PwmPinFixture();
+            var mockPin = fixture.CreateFakePin();
 
             var expected = new List<int> { 10, 20, 30, 40, 50 };
 
@@ -31,11 +31,11 @@ namespace ChickNet.UnitTests.PwmTests
         public async Task ChangeDutyCycleInSteps_AtSpeed_DeAcceleratesInSteps()
         {
             // Arrange
-            var fixture = new PwmPinExtensionsFixture();
+            var fixture = new PwmPinFixture();
             var mockPin = 
                 fixture
                     .WithCurrentDutyCycle(90)
-                    .CreateFake();
+                    .CreateFakePin();
 
             var expected = new List<int> { 80, 70, 60, 50, 40 };
 
@@ -51,8 +51,8 @@ namespace ChickNet.UnitTests.PwmTests
         public async Task ChangeDutyCycleInSteps_ChangeSmallerThan1PerStep_AcceleratesInFewerSteps()
         {
             // Arrange
-            var fixture = new PwmPinExtensionsFixture();
-            var mockPin = fixture.CreateFake();
+            var fixture = new PwmPinFixture();
+            var mockPin = fixture.CreateFakePin();
 
             var expected = new List<int> { 1, 2, 3, 4 };
 
@@ -67,15 +67,15 @@ namespace ChickNet.UnitTests.PwmTests
         [Theory]
         [InlineData(0)]
         [InlineData(50)]
-        [InlineData(100)]
+        [InlineData(255)]
         public async Task ChangeDutyCycleInSteps_AtTargetDutycycleAlready_DoesNothing(int dutyCycle)
         {
             // Arrange
-            var fixture = new PwmPinExtensionsFixture();
+            var fixture = new PwmPinFixture();
             var mockPin = 
                 fixture
                     .WithCurrentDutyCycle(dutyCycle)
-                    .CreateFake();
+                    .CreateFakePin();
 
             // Act
             await mockPin.ChangeDutyCycleInStepsAsync(dutyCycle);
@@ -89,11 +89,11 @@ namespace ChickNet.UnitTests.PwmTests
         public async Task Stop_AlreadyStopped_DoesNothing()
         {
             // Arrange
-            var fixture = new PwmPinExtensionsFixture();
+            var fixture = new PwmPinFixture();
             var mockPin =
                 fixture
                     .WithCurrentDutyCycle(0)
-                    .CreateFake();
+                    .CreateFakePin();
 
             // Act
             await mockPin.Stop();
@@ -104,16 +104,16 @@ namespace ChickNet.UnitTests.PwmTests
         }
 
         [Theory]
-        [InlineData(90, 60, 30, 0)]
+        [InlineData(150, 100, 50, 0)]
         [InlineData(12, 8, 4, 0)]
         public async Task Stop_AtSpeed_DeAcceleratesInAFewSteps(int startSpeed, int expectedStep1, int expectedStep2, int expectedStep3)
         {
             // Arrange
-            var fixture = new PwmPinExtensionsFixture();
+            var fixture = new PwmPinFixture();
             var mockPin =
                 fixture
                     .WithCurrentDutyCycle(startSpeed)
-                    .CreateFake();
+                    .CreateFakePin();
 
             var expected = new List<int> { expectedStep1, expectedStep2, expectedStep3 };
 
@@ -126,11 +126,11 @@ namespace ChickNet.UnitTests.PwmTests
         }
     }
 
-    public class PwmPinExtensionsFixture
+    public class PwmPinFixture
     {
         private int _currentDutyCycle;
 
-        public PwmPinExtensionsFixture()
+        public PwmPinFixture()
         {
             DutycycleChanges = new List<int>();
 
@@ -139,14 +139,14 @@ namespace ChickNet.UnitTests.PwmTests
 
         public List<int> DutycycleChanges { get; }
 
-        public PwmPinExtensionsFixture WithCurrentDutyCycle(int dutyCycle)
+        public PwmPinFixture WithCurrentDutyCycle(int dutyCycle)
         {
             _currentDutyCycle = dutyCycle;
 
             return this;
         }
 
-        public IPwmPin CreateFake()
+        public IPwmPin CreateFakePin()
         {
             var result = new Mock<IPwmPin>();
 
@@ -157,7 +157,7 @@ namespace ChickNet.UnitTests.PwmTests
 
             // Record changes made to duty cycle.
             result
-                .Setup(m => m.SetActiveDutyCyclePercentage(It.IsAny<int>()))
+                .Setup(m => m.SetActiveDutyCycle(It.IsAny<int>()))
                 .Callback(
                     (int newDutyCylcle) =>
                     {

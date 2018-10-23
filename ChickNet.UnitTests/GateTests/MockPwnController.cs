@@ -20,10 +20,10 @@ namespace ChickNet.UnitTests.GateTests
         public Direction Direction { get; set; }
 
         /// <inheritdoc />
-        public int DutyCycle { get; }
+        public int DutyCyclePercent { get; }
 
         /// <inheritdoc />
-        public Task ChangeDutyCycleAsync(int percent)
+        public Task ChangeDutyCyclePercentAsync(int percent)
         {
             DutycycleHistory.Add(
                 new DutyCycleChangeEvent

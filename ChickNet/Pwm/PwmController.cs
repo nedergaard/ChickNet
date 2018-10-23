@@ -15,10 +15,11 @@ namespace ChickNet.Pwm
             _forwardPwmPin = forwardPwmPin;
             _backwardPwmPin = backwardPwmPin;
 
+            _activePin = forwardPwmPin;
+
             _stepsPerChange = stepsPerChange;
 
             Direction = Direction.Forward;
-            _dutyCycle = 0;
         }
 
         private IPwmPin _activePin;
@@ -26,7 +27,7 @@ namespace ChickNet.Pwm
         private async Task SetActivePinAsync(IPwmPin value)
         {
             var inactivePin = value == _forwardPwmPin ? _backwardPwmPin : _forwardPwmPin;
-            inactivePin.SetActiveDutyCyclePercentage(0);
+            inactivePin.SetActiveDutyCycle(0);
 
             if (value == _activePin)
             {
@@ -43,44 +44,22 @@ namespace ChickNet.Pwm
         /// <inheritdoc />
         public Direction Direction { get; set; }
 
-        private int _dutyCycle;
+        /// <inheritdoc />
+        public int DutyCyclePercent => _activePin.CurrentDutyCycle;
 
         /// <inheritdoc />
-        public int DutyCycle
+        public async Task ChangeDutyCyclePercentAsync(int percent)
         {
-            get => _dutyCycle;
-            private set
-            {
-                _dutyCycle = value;
-                _activePin.SetActiveDutyCyclePercentage(_dutyCycle);
-            }
-        }
+            var targetDutyCycle =(int)Math.Round(Math.Min(100, Math.Max(0, percent)) * 2.55);
 
-        /// <inheritdoc />
-        public async Task ChangeDutyCycleAsync(int percent)
-        {
-            var targetDutyCycle = Math.Min(100, Math.Max(0, percent)) * 255;
-
-            await InternalChangeDutyCycleAsync(targetDutyCycle, _stepsPerChange, 80);
+            await _activePin.ChangeDutyCycleInStepsAsync(targetDutyCycle, _stepsPerChange, 80);
         }
 
         /// <inheritdoc />
         public async Task StopAsync()
         {
-            await InternalChangeDutyCycleAsync(0, Math.Min(2, _stepsPerChange), Math.Min(40, 80));
-        }
-
-        private async Task InternalChangeDutyCycleAsync(int targetDutyCycle, int stepsPerChange, int delayPerStepMS)
-        {
-            var step = (targetDutyCycle - DutyCycle) / stepsPerChange;
-            do
-            {
-                DutyCycle += step;
-                await Task.Delay(delayPerStepMS);
-
-            } while (Math.Abs(DutyCycle - targetDutyCycle) > step);
-
-            DutyCycle = targetDutyCycle;
+            // NOTEST 
+            await _activePin.Stop(Math.Min(2, _stepsPerChange), Math.Min(40, 80));
         }
 
         #endregion
@@ -90,6 +69,6 @@ namespace ChickNet.Pwm
     {
         int CurrentDutyCycle { get; }
 
-        void SetActiveDutyCyclePercentage(int newDutyCyclePct);
+        void SetActiveDutyCycle(int newDutyCycle);
     }
 }

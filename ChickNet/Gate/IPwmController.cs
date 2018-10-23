@@ -10,13 +10,13 @@ namespace ChickNet.Gate
     {
         Direction Direction { get; set; }
 
-        int DutyCycle { get; }
+        int DutyCyclePercent { get; }
 
         /// <summary>
-        /// Smoothly changes the <see cref="DutyCycle"/> to a new value.
+        /// Smoothly changes the <see cref="DutyCyclePercent"/> to a new value.
         /// </summary>
-        /// <param name="percent">New DutyCycle percentage</param>
-        Task ChangeDutyCycleAsync(int percent);
+        /// <param name="percent">New DutyCyclePercent percentage</param>
+        Task ChangeDutyCyclePercentAsync(int percent);
 
         /// <summary>
         /// Steps duty cycle to 0 rapidly

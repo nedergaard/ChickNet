@@ -29,11 +29,11 @@ namespace ChickNet.Pwm
                 {
                     do
                     {
-                        pwmPin.SetActiveDutyCyclePercentage(pwmPin.CurrentDutyCycle + fullStep);
+                        pwmPin.SetActiveDutyCycle(pwmPin.CurrentDutyCycle + fullStep);
                         await Task.Delay(delayPerStepMs);
 
                     } while (Math.Abs(pwmPin.CurrentDutyCycle - targetDutyCycle) > Math.Abs(fullStep));
-                    pwmPin.SetActiveDutyCyclePercentage(targetDutyCycle);
+                    pwmPin.SetActiveDutyCycle(targetDutyCycle);
                 });
         }
     }

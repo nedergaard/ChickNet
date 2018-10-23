@@ -32,7 +32,7 @@ namespace ChickNet.Gate
 
             _pwmController.Direction = Direction.Forward;
             // Accelerate motor
-            await _pwmController.ChangeDutyCycleAsync(100);
+            await _pwmController.ChangeDutyCyclePercentAsync(100);
 
             var timeOutTime = DateTime.Now.AddSeconds(20);
             // Wait for gate to be fully open
@@ -41,7 +41,7 @@ namespace ChickNet.Gate
                 await Task.Delay(200);
             }
 
-            await _pwmController.ChangeDutyCycleAsync(0);
+            await _pwmController.ChangeDutyCyclePercentAsync(0);
         }
 
         public async Task CloseGateAsync(int gateNrToClose)
@@ -59,7 +59,7 @@ namespace ChickNet.Gate
             }
 
             _pwmController.Direction = Direction.Backward;
-            await _pwmController.ChangeDutyCycleAsync(100);
+            await _pwmController.ChangeDutyCyclePercentAsync(100);
 
             var timeOutTime = DateTime.Now.AddSeconds(20);
             // Wait for gate to be fully open
@@ -68,7 +68,7 @@ namespace ChickNet.Gate
                 await Task.Delay(200);
             }
 
-            await _pwmController.ChangeDutyCycleAsync(0);
+            await _pwmController.ChangeDutyCyclePercentAsync(0);
         }
     }
 }
