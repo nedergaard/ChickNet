@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ChickNet.Gate;
 using ChickNet.Pwm;
 using FluentAssertions;
@@ -20,13 +19,73 @@ namespace ChickNet.UnitTests.PwmTests
             // Arrange
             var fixture = new PwmControllerFixture();
 
-            var dut = fixture.CreateDut();
+            var dut = await fixture.CreateDutAsync();
 
             // Act
             await dut.ChangeDutyCyclePercentAsync(percentInput);
 
             // Assert
             fixture.ForwardPwmPin.CurrentDutyCycle.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData(100)]
+        [InlineData(25)]
+        public async Task ChangeDutyCycleAsyncToPercent_AtZero_DutyCyclePercentIsUpdated(int expected)
+        {
+            // Arrange
+            var dut = await new PwmControllerFixture().CreateDutAsync();
+
+            // Act
+            await dut.ChangeDutyCyclePercentAsync(expected);
+
+            // Assert
+            dut.DutyCyclePercent.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData(20, 51)]
+        [InlineData(100, 255)]
+        public async Task SetDirectionAsync_Running_ChangesCurrentPinDutyCycleToZeroThenSpinsUpOtherPin(
+            int initialPercentDutyCycle, int expectedDutyCycle)
+        {
+            // Arrange
+            var fixture = new PwmControllerFixture();
+
+            var dut = 
+                await fixture
+                    .WithDirection(Direction.Forward)
+                    .WithDutyCyclePercent(initialPercentDutyCycle)
+                    .WithForwardPinDutyCycle(expectedDutyCycle)
+                    .CreateDutAsync();
+
+            // Act
+            await dut.SetDirectionAsync(Direction.Backward);
+
+            // Assert
+            fixture.ForwardPwmPin.CurrentDutyCycle.Should().Be(0);
+            fixture.BackwardPwmPin.CurrentDutyCycle.Should().Be(expectedDutyCycle);
+        }
+
+        [Theory]
+        [InlineData(Direction.Backward, Direction.Forward)]
+        [InlineData(Direction.Forward, Direction.Backward)]
+        public async Task SetDirectionAsync_default_DirectionPropertyIsUpdated(Direction initialDirection, Direction newDirection)
+        {
+            // Arrange
+            var fixture = new PwmControllerFixture();
+
+            var dut =
+                await fixture
+                    .WithDirection(initialDirection)
+                    .CreateDutAsync();
+
+            // Act
+            await dut.SetDirectionAsync(newDirection);
+
+            // Assert
+            dut.Direction.Should()
+                .Be(newDirection);
         }
     }
 
@@ -52,21 +111,40 @@ namespace ChickNet.UnitTests.PwmTests
             _dutyCyclePercent = 1;
             _stepsPerChange = 3;
 
-            ForwardPwmPin = NewForwardMockPin().Object;
-            BackwardPwmPin = NewBackwardMockPin().Object;
         }
 
-        public PwmController CreateDut()
+        public async Task<PwmController> CreateDutAsync()
         {
-            (_direction == Direction.Forward ? ForwardPwmPin : BackwardPwmPin).SetActiveDutyCycle(_dutyCyclePercent);
+            ForwardPwmPin = NewForwardMockPin().Object;
+            BackwardPwmPin = NewBackwardMockPin().Object;
 
-            var result = 
-                new PwmController(ForwardPwmPin, BackwardPwmPin, _stepsPerChange)
-                {
-                    Direction = _direction
-                };
+            var result = new PwmController(ForwardPwmPin, BackwardPwmPin, _stepsPerChange);
+
+            await result.SetDirectionAsync(_direction);
+            await result.ChangeDutyCyclePercentAsync(_dutyCyclePercent);
 
             return result;
+        }
+
+        public PwmControllerFixture WithDirection(Direction direction)
+        {
+            _direction = direction;
+
+            return this;
+        }
+
+        public PwmControllerFixture WithDutyCyclePercent(int dutyCyclePercent)
+        {
+            _dutyCyclePercent = dutyCyclePercent;
+
+            return this;
+        }
+
+        public PwmControllerFixture WithForwardPinDutyCycle(int dutyCycle)
+        {
+            _forwardDutyCycle = dutyCycle;
+
+            return this;
         }
 
         private Mock<IPwmPin> NewForwardMockPin()
@@ -78,7 +156,6 @@ namespace ChickNet.UnitTests.PwmTests
                 .SetupGet(m => m.CurrentDutyCycle)
                 .Returns(() => _forwardDutyCycle);
 
-            // Record changes made to duty cycle.
             result
                 .Setup(m => m.SetActiveDutyCycle(It.IsAny<int>()))
                 .Callback(
@@ -99,7 +176,6 @@ namespace ChickNet.UnitTests.PwmTests
                 .SetupGet(m => m.CurrentDutyCycle)
                 .Returns(() => _backwardDutyCycle);
 
-            // Record changes made to duty cycle.
             result
                 .Setup(m => m.SetActiveDutyCycle(It.IsAny<int>()))
                 .Callback(

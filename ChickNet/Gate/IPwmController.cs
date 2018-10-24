@@ -8,7 +8,9 @@ namespace ChickNet.Gate
     /// </summary>
     public interface IPwmController
     {
-        Direction Direction { get; set; }
+        Direction Direction { get; }
+
+        Task SetDirectionAsync(Direction newDirection);
 
         int DutyCyclePercent { get; }
 

@@ -27,14 +27,12 @@ namespace ChickNet.Pwm
         private async Task SetActivePinAsync(IPwmPin value)
         {
             var inactivePin = value == _forwardPwmPin ? _backwardPwmPin : _forwardPwmPin;
-            inactivePin.SetActiveDutyCycle(0);
-
             if (value == _activePin)
             {
                 return;
             }
 
-            await StopAsync();
+            await inactivePin.ChangeDutyCycleInStepsAsync(0);
 
             _activePin = value;
         }
@@ -42,10 +40,23 @@ namespace ChickNet.Pwm
         #region Implementation of IPwmController
 
         /// <inheritdoc />
-        public Direction Direction { get; set; }
+        public Direction Direction { get; private set; }
 
         /// <inheritdoc />
-        public int DutyCyclePercent => _activePin.CurrentDutyCycle;
+        public async Task SetDirectionAsync(Direction newDirection)
+        {
+            await SetActivePinAsync(
+                newDirection == Direction.Forward
+                    ? _forwardPwmPin
+                    : _backwardPwmPin);
+
+            Direction = newDirection;
+
+            await ChangeDutyCyclePercentAsync(DutyCyclePercent);
+        }
+
+        /// <inheritdoc />
+        public int DutyCyclePercent { get; private set; }
 
         /// <inheritdoc />
         public async Task ChangeDutyCyclePercentAsync(int percent)
@@ -53,6 +64,8 @@ namespace ChickNet.Pwm
             var targetDutyCycle =(int)Math.Round(Math.Min(100, Math.Max(0, percent)) * 2.55);
 
             await _activePin.ChangeDutyCycleInStepsAsync(targetDutyCycle, _stepsPerChange, 80);
+
+            DutyCyclePercent = percent;
         }
 
         /// <inheritdoc />

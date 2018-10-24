@@ -20,6 +20,14 @@ namespace ChickNet.UnitTests.GateTests
         public Direction Direction { get; set; }
 
         /// <inheritdoc />
+        public Task SetDirectionAsync(Direction newDirection)
+        {
+            Direction = newDirection;
+
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
         public int DutyCyclePercent { get; }
 
         /// <inheritdoc />

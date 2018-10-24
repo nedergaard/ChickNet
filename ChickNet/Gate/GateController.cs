@@ -30,7 +30,7 @@ namespace ChickNet.Gate
                 return;
             }
 
-            _pwmController.Direction = Direction.Forward;
+            await _pwmController.SetDirectionAsync(Direction.Forward);
             // Accelerate motor
             await _pwmController.ChangeDutyCyclePercentAsync(100);
 
@@ -58,7 +58,7 @@ namespace ChickNet.Gate
                 return;
             }
 
-            _pwmController.Direction = Direction.Backward;
+            await _pwmController.SetDirectionAsync(Direction.Backward);
             await _pwmController.ChangeDutyCyclePercentAsync(100);
 
             var timeOutTime = DateTime.Now.AddSeconds(20);
