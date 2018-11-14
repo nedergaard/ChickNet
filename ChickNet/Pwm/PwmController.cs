@@ -80,8 +80,8 @@ namespace ChickNet.Pwm
 
     public interface IPwmPin
     {
-        int CurrentDutyCycle { get; }
+        int CurrentDutyCyclePercent { get; }
 
-        void SetActiveDutyCycle(int newDutyCycle);
+        void SetActiveDutyCyclePercent(int newDutyCycle);
     }
 }

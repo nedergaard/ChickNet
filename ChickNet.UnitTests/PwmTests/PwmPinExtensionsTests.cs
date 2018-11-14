@@ -66,8 +66,10 @@ namespace ChickNet.UnitTests.PwmTests
 
         [Theory]
         [InlineData(0)]
+        [InlineData(1)]
         [InlineData(50)]
-        [InlineData(255)]
+        [InlineData(99)]
+        [InlineData(100)]
         public async Task ChangeDutyCycleInSteps_AtTargetDutycycleAlready_DoesNothing(int dutyCycle)
         {
             // Arrange
@@ -150,14 +152,14 @@ namespace ChickNet.UnitTests.PwmTests
         {
             var result = new Mock<IPwmPin>();
 
-            // Fake CurrentDutyCycle property
+            // Fake CurrentDutyCyclePercent property
             result
-                .SetupGet(m => m.CurrentDutyCycle)
+                .SetupGet(m => m.CurrentDutyCyclePercent)
                 .Returns(() => _currentDutyCycle);
 
             // Record changes made to duty cycle.
             result
-                .Setup(m => m.SetActiveDutyCycle(It.IsAny<int>()))
+                .Setup(m => m.SetActiveDutyCyclePercent(It.IsAny<int>()))
                 .Callback(
                     (int newDutyCylcle) =>
                     {

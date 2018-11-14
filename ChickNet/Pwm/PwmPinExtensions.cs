@@ -13,7 +13,7 @@ namespace ChickNet.Pwm
         public static Task ChangeDutyCycleInStepsAsync(this IPwmPin pwmPin, int targetDutyCycle,
             int stepsPerChange = 6, int delayPerStepMs = 80)
         {
-            var dutyCycleChange = targetDutyCycle - pwmPin.CurrentDutyCycle;
+            var dutyCycleChange = targetDutyCycle - pwmPin.CurrentDutyCyclePercent;
             
             // Adjust stepsPerChange if each step would be less than 1
             stepsPerChange = Math.Min(stepsPerChange, Math.Abs(dutyCycleChange));
@@ -29,11 +29,11 @@ namespace ChickNet.Pwm
                 {
                     do
                     {
-                        pwmPin.SetActiveDutyCycle(pwmPin.CurrentDutyCycle + fullStep);
+                        pwmPin.SetActiveDutyCyclePercent(pwmPin.CurrentDutyCyclePercent + fullStep);
                         await Task.Delay(delayPerStepMs);
 
-                    } while (Math.Abs(pwmPin.CurrentDutyCycle - targetDutyCycle) > Math.Abs(fullStep));
-                    pwmPin.SetActiveDutyCycle(targetDutyCycle);
+                    } while (Math.Abs(pwmPin.CurrentDutyCyclePercent - targetDutyCycle) > Math.Abs(fullStep));
+                    pwmPin.SetActiveDutyCyclePercent(targetDutyCycle);
                 });
         }
     }

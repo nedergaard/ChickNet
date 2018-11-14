@@ -11,24 +11,6 @@ namespace ChickNet.UnitTests.PwmTests
     {
         // [UnitOfWork_StateUnderTest_ExpectedBehavior]
         [Theory]
-        [InlineData(100, 255)]
-        [InlineData(0, 0)]
-        [InlineData(20, 51)]
-        public async Task ChangeDutyCycleAsyncToPercent_AtZero_TranslatesToByte(int percentInput, int expected)
-        {
-            // Arrange
-            var fixture = new PwmControllerFixture();
-
-            var dut = await fixture.CreateDutAsync();
-
-            // Act
-            await dut.ChangeDutyCyclePercentAsync(percentInput);
-
-            // Assert
-            fixture.ForwardPwmPin.CurrentDutyCycle.Should().Be(expected);
-        }
-
-        [Theory]
         [InlineData(100)]
         [InlineData(25)]
         public async Task ChangeDutyCycleAsyncToPercent_AtZero_DutyCyclePercentIsUpdated(int expected)
@@ -63,8 +45,8 @@ namespace ChickNet.UnitTests.PwmTests
             await dut.SetDirectionAsync(Direction.Backward);
 
             // Assert
-            fixture.ForwardPwmPin.CurrentDutyCycle.Should().Be(0);
-            fixture.BackwardPwmPin.CurrentDutyCycle.Should().Be(expectedDutyCycle);
+            fixture.ForwardPwmPin.CurrentDutyCyclePercent.Should().Be(0);
+            fixture.BackwardPwmPin.CurrentDutyCyclePercent.Should().Be(expectedDutyCycle);
         }
 
         [Theory]
@@ -151,13 +133,13 @@ namespace ChickNet.UnitTests.PwmTests
         {
             var result = new Mock<IPwmPin>();
 
-            // Fake CurrentDutyCycle property
+            // Fake CurrentDutyCyclePercent property
             result
-                .SetupGet(m => m.CurrentDutyCycle)
+                .SetupGet(m => m.CurrentDutyCyclePercent)
                 .Returns(() => _forwardDutyCycle);
 
             result
-                .Setup(m => m.SetActiveDutyCycle(It.IsAny<int>()))
+                .Setup(m => m.SetActiveDutyCyclePercent(It.IsAny<int>()))
                 .Callback(
                     (int newDutyCylcle) =>
                     {
@@ -171,13 +153,13 @@ namespace ChickNet.UnitTests.PwmTests
         {
             var result = new Mock<IPwmPin>();
 
-            // Fake CurrentDutyCycle property
+            // Fake CurrentDutyCyclePercent property
             result
-                .SetupGet(m => m.CurrentDutyCycle)
+                .SetupGet(m => m.CurrentDutyCyclePercent)
                 .Returns(() => _backwardDutyCycle);
 
             result
-                .Setup(m => m.SetActiveDutyCycle(It.IsAny<int>()))
+                .Setup(m => m.SetActiveDutyCyclePercent(It.IsAny<int>()))
                 .Callback(
                     (int newDutyCylcle) =>
                     {
