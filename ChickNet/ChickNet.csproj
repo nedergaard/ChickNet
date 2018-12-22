@@ -96,6 +96,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gate\GateController.cs" />
+    <Compile Include="Gate\GateState.cs" />
+    <Compile Include="Gate\GateStates.cs" />
     <Compile Include="Gate\IGateState.cs" />
     <Compile Include="Gate\IGateStates.cs" />
     <Compile Include="Gate\IPwmController.cs" />
