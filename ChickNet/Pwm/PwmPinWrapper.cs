@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Devices.Pwm;
 
 namespace ChickNet.Pwm
@@ -19,7 +15,7 @@ namespace ChickNet.Pwm
         #region Implementation of IPwmPin
 
         /// <inheritdoc />
-        public int CurrentDutyCyclePercent { get; }
+        public int CurrentDutyCyclePercent => (int)Math.Round(_wrappedPin.GetActiveDutyCyclePercentage(), 0);
 
         /// <inheritdoc />
         public void SetActiveDutyCyclePercent(int newDutyCycle)
