@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using ChickNet.Gate;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -22,9 +23,48 @@ namespace ChickNet
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private readonly ChickNetApp _app;
+
+        //public static readonly DependencyProperty Gate1StateProperty =
+        //    DependencyProperty.Register("Gate1State", typeof(IGateState), typeof(MainPage), new PropertyMetadata(string.Empty));
+
+        //public IGateState Gate1State => _app.Gate1State;
+
         public MainPage()
         {
             this.InitializeComponent();
+
+            WriteDebug("Hello");
+
+            _app = new ChickNetApp();
+
+            WriteDebug("App instantiated");
+            
+            _app.InitializeHardware().GetAwaiter();
+
+            WriteDebug("HW init started");
+        }
+
+        public void WriteDebug(string s)
+        {
+            DebugText.Text = $"{DebugText.Text}\n{s}";
+        }
+
+        private void ButtonGate1_OnClick(object sender, RoutedEventArgs e)
+        {
+            //if (_app.Gate1State.IsClosed)
+            //{
+            //    _app.GateController.OpenGateAsync(1);
+            //    return;
+            //}
+
+            //_app.GateController.CloseGateAsync(1);
+            RectangleOutput.Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 240, 20, 20));
+        }
+
+        private void ButtonGate2_Click(object sender, RoutedEventArgs e)
+        {
+            RectangleOutput.Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 20, 230, 20));
         }
     }
 }
