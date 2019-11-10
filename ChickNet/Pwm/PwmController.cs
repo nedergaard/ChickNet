@@ -61,7 +61,7 @@ namespace ChickNet.Pwm
         /// <inheritdoc />
         public async Task ChangeDutyCyclePercentAsync(int percent)
         {
-            var targetDutyCycle =(int)Math.Round(Math.Min(100, Math.Max(0, percent)) * 2.55);
+            var targetDutyCycle = Math.Min(100, Math.Max(0, percent));
 
             await _activePin.ChangeDutyCycleInStepsAsync(targetDutyCycle, _stepsPerChange, 80);
 

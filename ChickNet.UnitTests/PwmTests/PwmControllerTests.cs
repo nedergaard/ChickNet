@@ -26,8 +26,8 @@ namespace ChickNet.UnitTests.PwmTests
         }
 
         [Theory]
-        [InlineData(20, 51)]
-        [InlineData(100, 255)]
+        [InlineData(20, 20)]
+        [InlineData(100, 100)]
         public async Task SetDirectionAsync_Running_ChangesCurrentPinDutyCycleToZeroThenSpinsUpOtherPin(
             int initialPercentDutyCycle, int expectedDutyCycle)
         {

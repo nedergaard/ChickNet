@@ -27,9 +27,11 @@ namespace ChickNet.Pwm
             return Task.Run(
                 async () =>
                 {
+                    int currentDutyCycle;
                     do
                     {
-                        pwmPin.SetActiveDutyCyclePercent(pwmPin.CurrentDutyCyclePercent + fullStep);
+                        currentDutyCycle = pwmPin.CurrentDutyCyclePercent;
+                        pwmPin.SetActiveDutyCyclePercent(currentDutyCycle + fullStep);
                         await Task.Delay(delayPerStepMs);
 
                     } while (Math.Abs(pwmPin.CurrentDutyCyclePercent - targetDutyCycle) > Math.Abs(fullStep));
