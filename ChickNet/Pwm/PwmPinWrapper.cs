@@ -15,12 +15,22 @@ namespace ChickNet.Pwm
         #region Implementation of IPwmPin
 
         /// <inheritdoc />
-        public int CurrentDutyCyclePercent => (int)Math.Round(_wrappedPin.GetActiveDutyCyclePercentage(), 0);
+        public int CurrentDutyCyclePercent => (int)Math.Round(_wrappedPin.GetActiveDutyCyclePercentage() * 100, 0);
 
         /// <inheritdoc />
         public void SetActiveDutyCyclePercent(int newDutyCycle)
         {
-            _wrappedPin.SetActiveDutyCyclePercentage(newDutyCycle);
+            double newDutyCyclePercent = Math.Round(newDutyCycle / 100D, 2);
+            _wrappedPin.SetActiveDutyCyclePercentage(newDutyCyclePercent);
+
+            if (!_wrappedPin.IsStarted)
+            {
+                _wrappedPin.Start();
+            }
+            if (_wrappedPin.IsStarted && newDutyCyclePercent < 0.01)
+            {
+                _wrappedPin.Stop();
+            }
         }
 
         #endregion
