@@ -34,37 +34,45 @@ namespace ChickNet
         {
             this.InitializeComponent();
 
-            WriteDebug("Hello");
-
             _app = new ChickNetApp();
-
-            WriteDebug("App instantiated");
-            
+           
             _app.InitializeHardware().GetAwaiter();
-
-            WriteDebug("HW init started");
         }
 
         public void WriteDebug(string s)
         {
-            DebugText.Text = $"{DebugText.Text}\n{s}";
+            DebugText.Text = s;
         }
 
         private void ButtonGate1_OnClick(object sender, RoutedEventArgs e)
         {
-            //if (_app.Gate1State.IsClosed)
-            //{
-            //    _app.GateController.OpenGateAsync(1);
-            //    return;
-            //}
-
-            //_app.GateController.CloseGateAsync(1);
+            // Debug:
             RectangleOutput.Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 240, 20, 20));
+
+            if (_app.Gate1State.IsClosed)
+            {
+                WriteDebug("Opening gate 1");
+                _app.GateController.OpenGateAsync(1);
+                return;
+            }
+
+            WriteDebug("Closing gate 1");
+            _app.GateController.CloseGateAsync(1);
         }
 
         private void ButtonGate2_Click(object sender, RoutedEventArgs e)
         {
             RectangleOutput.Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 20, 230, 20));
+
+            if (_app.Gate2State.IsClosed)
+            {
+                WriteDebug("Opening gate 2");
+                _app.GateController.OpenGateAsync(2);
+                return;
+            }
+
+            WriteDebug("Closing gate 2");
+            _app.GateController.CloseGateAsync(2);
         }
     }
 }
