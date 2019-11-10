@@ -6,9 +6,12 @@ namespace ChickNet.Selection
     {
         private readonly GpioPin _wrappedPin;
 
-        public GpioPinWrapper(GpioPin wrappedPin)
+        // TODO : Create elegant way to handle drive modes
+        public GpioPinWrapper(GpioPin wrappedPin, GpioPinDriveMode gpioPinDriveMode)
         {
             _wrappedPin = wrappedPin;
+
+            _wrappedPin.SetDriveMode(gpioPinDriveMode);
         }
 
         #region Implementation of IPin

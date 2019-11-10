@@ -20,7 +20,7 @@ namespace ChickNet
     {
         public GateController GateController { get; private set; }
 
-        private readonly GpioController _gpioController;
+        private GpioController _gpioController;
 
         private GateStates _gateStates;
 
@@ -29,7 +29,6 @@ namespace ChickNet
 
         public ChickNetApp()
         {
-            _gpioController = GpioController.GetDefault();
         }
 
         public async Task InitializeHardware()
@@ -42,52 +41,58 @@ namespace ChickNet
                 var pwmController = pwmControllers[1]; // the on-device controller
                 pwmController.SetDesiredFrequency(100);
 
+                _gpioController = await GpioController.GetDefaultAsync();
+
+                IPin GetInputPin(int pinNr)
+                {
+                    return new GpioPinWrapper(_gpioController.OpenPin(pinNr, GpioSharingMode.Exclusive), GpioPinDriveMode.InputPullUp);
+                }
+
                 _gateStates = new GateStates();
                 _gateStates.Add(
                     // Center switches (on bread board)
                     new GateState(
                         // Yellow button, Closed
-                        new GpioPinWrapper(_gpioController.OpenPin(27)),
+                        GetInputPin(27),
                         // Red button, Open
-                        new GpioPinWrapper(_gpioController.OpenPin(22))),
+                        GetInputPin(22)),
                     1);
                 _gateStates.Add(
                     // Top switches (on bread board)
                     new GateState(
                         // Yellow button, Closed
-                        new GpioPinWrapper(_gpioController.OpenPin(4)),
+                        GetInputPin(4),
                         // Red button, Open
-                        new GpioPinWrapper(_gpioController.OpenPin(17))),
+                        GetInputPin(17)),
                     2);
 
                 IPwmPin GetPwmPin(int pinNr)
                 {
-                    var pin = _gpioController.OpenPin(pinNr);
-                    pin.SetDriveMode(GpioPinDriveMode.Output);
+                    //var pin = _gpioController.OpenPin(pinNr);
+                    //pin.SetDriveMode(GpioPinDriveMode.Output);
                     return new PwmPinWrapper(pwmController.OpenPin(pinNr));
                 }
 
                 GateController =
                     new GateController(
                         // TODO : pins in settings, selector: 6, 13, 19
-                        new Selector(GetPins(6, 13, 19)),
+                        new Selector(GetOutputPins(6, 13, 19)),
                         new PwmController(
                             // TODO : pins in settings: 20, 21
                             GetPwmPin(20),
                             GetPwmPin(21),
-                            20),
+                            8),
                         _gateStates);
             }
         }
 
-        private IEnumerable<IPin> GetPins(params int[] pinNumbers)
+        private IEnumerable<IPin> GetOutputPins(params int[] pinNumbers)
         {
-            for (var pinNr = 0; pinNr < pinNumbers.Length; pinNr++)
+            for (var pinNrIndex = 0; pinNrIndex < pinNumbers.Length; pinNrIndex++)
             {
-                var pin = _gpioController.OpenPin(pinNr);
-                pin.SetDriveMode(GpioPinDriveMode.Output);
+                var pin = _gpioController.OpenPin(pinNumbers[pinNrIndex], GpioSharingMode.Exclusive);
 
-                yield return new GpioPinWrapper(pin);
+                yield return new GpioPinWrapper(pin, GpioPinDriveMode.Output);
             }
         }
     }
