@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using ChickNet.Gate;
+using System.Threading;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -28,16 +29,19 @@ namespace ChickNet
         //public static readonly DependencyProperty Gate1StateProperty =
         //    DependencyProperty.Register("Gate1State", typeof(IGateState), typeof(MainPage), new PropertyMetadata(string.Empty));
 
-        //public IGateState Gate1State => _app.Gate1State;
+        public GateStateModel Gate1State { get; set; }
 
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             _app = new ChickNetApp();
            
-            _app.InitializeHardware().GetAwaiter();
+            _app.InitializeHardware().GetAwaiter().GetResult();
+
+            Gate1State = new GateStateModel(_app.Gate1State, SynchronizationContext.Current);
         }
+
 
         public void WriteDebug(string s)
         {
@@ -62,6 +66,7 @@ namespace ChickNet
 
         private void ButtonGate2_Click(object sender, RoutedEventArgs e)
         {
+            // Debug:
             RectangleOutput.Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 20, 230, 20));
 
             if (_app.Gate2State.IsClosed)

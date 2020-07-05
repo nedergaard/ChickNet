@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10" IgnorableNamespaces="uap mp iot">
+<Package 
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" 
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" 
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" 
+  xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10" 
+  IgnorableNamespaces="uap mp iot">
   <Identity Name="06fa5e6e-d964-49d8-88b5-36c773b02106" Publisher="CN=Leander" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="06fa5e6e-d964-49d8-88b5-36c773b02106" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>

@@ -19,15 +19,15 @@ namespace ChickNet.UI
         /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (!(value is IGateState gateState) || targetType != typeof(Color))
+            if (!(value is GateStateModel gateState) || targetType != typeof(Color))
             {
-                throw new ArgumentException("Converts only IGateState to Color");
+                throw new ArgumentException("Converts only GateStateModel to Color");
             }
 
-            if (gateState.IsClosed)
-            {
-                return Color.FromArgb(150, 200, 30, 30);
-            }
+            //if (gateState.IsClosed)
+            //{
+            //    return Color.FromArgb(150, 200, 30, 30);
+            //}
             return gateState.IsOpen
                 ? Color.FromArgb(150, 30, 200, 30)
                 : Color.FromArgb(150, 30, 30, 220);

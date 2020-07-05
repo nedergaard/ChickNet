@@ -37,9 +37,14 @@ namespace ChickNet
             {
                 LowLevelDevicesController.DefaultProvider = LightningProvider.GetAggregateProvider();
 
-                var pwmControllers = await Windows.Devices.Pwm.PwmController.GetControllersAsync(LightningPwmProvider.GetPwmProvider());
+                var pmwProvider = LightningPwmProvider.GetPwmProvider();
+
+//                var pwmControllers = await Windows.Devices.Pwm.PwmController.GetControllersAsync(pmwProvider);
+                var pwmControllers = Windows.Devices.Pwm.PwmController.GetControllersAsync(pmwProvider).GetAwaiter().GetResult();
                 var pwmController = pwmControllers[1]; // the on-device controller
-                pwmController.SetDesiredFrequency(100);
+
+                // This seems to go bad
+                //pwmController.SetDesiredFrequency(100);
 
                 _gpioController = await GpioController.GetDefaultAsync();
 
