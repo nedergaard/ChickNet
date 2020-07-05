@@ -13,10 +13,11 @@ using ChickNet.Pwm;
 using ChickNet.Selection;
 using Microsoft.IoT.Lightning.Providers;
 using PwmController = ChickNet.Pwm.PwmController;
+using System.Threading;
 
 namespace ChickNet
 {
-    public class ChickNetApp
+    public class ChickNetApp : IDisposable
     {
         public GateController GateController { get; private set; }
 
@@ -88,6 +89,10 @@ namespace ChickNet
                             GetPwmPin(21),
                             8),
                         _gateStates);
+
+                // TODO : pins in settings: 24
+                _heartBeatPin = GetOutputPins(24).First();
+                _heartBeatTimer = new Timer(HandleHeartBeat, _heartBeatState, 100, Timeout.Infinite);
             }
         }
 
@@ -100,5 +105,51 @@ namespace ChickNet
                 yield return new GpioPinWrapper(pin, GpioPinDriveMode.Output);
             }
         }
+
+        #region Heart beat
+
+        private Timer _heartBeatTimer;
+        private object _heartBeatState;
+        private IPin _heartBeatPin;
+        private bool _heartBeat;
+
+        private void HandleHeartBeat(object state)
+        {
+            _heartBeat = !_heartBeat;
+            _heartBeatPin.Write(_heartBeat ? GpioPinValue.High : GpioPinValue.Low);
+
+            _heartBeatTimer.Change(500, Timeout.Infinite);
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        private bool _isDisposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_isDisposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                _heartBeatTimer.Dispose();
+                _heartBeatTimer = null;
+            }
+
+            _isDisposed = true;
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
     }
 }
