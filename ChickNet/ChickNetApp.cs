@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices;
-using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Gpio;
-using Windows.Devices.Pwm;
 using ChickNet.Gate;
 using ChickNet.Pwm;
 using ChickNet.Selection;
@@ -62,7 +58,7 @@ namespace ChickNet
                         GetInputPin(27),
                         // Red button, Open
                         GetInputPin(22)),
-                    1);
+                        1);
                 _gateStates.Add(
                     // Top switches (on bread board)
                     new GateState(
@@ -70,7 +66,7 @@ namespace ChickNet
                         GetInputPin(4),
                         // Red button, Open
                         GetInputPin(17)),
-                    2);
+                        2);
 
                 IPwmPin GetPwmPin(int pinNr)
                 {
@@ -87,7 +83,8 @@ namespace ChickNet
                             // TODO : pins in settings: 20, 21
                             GetPwmPin(20),
                             GetPwmPin(21),
-                            8),
+                            // TODO : steps per change in settings
+                            3),
                         _gateStates);
 
                 // TODO : pins in settings: 24
@@ -138,6 +135,7 @@ namespace ChickNet
             {
                 _heartBeatTimer.Dispose();
                 _heartBeatTimer = null;
+                _heartBeatPin.Write(GpioPinValue.Low);
             }
 
             _isDisposed = true;
