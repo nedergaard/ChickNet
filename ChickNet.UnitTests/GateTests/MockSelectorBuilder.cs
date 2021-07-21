@@ -1,7 +1,4 @@
-﻿using ChickNet.Gate;
-using Moq;
-
-namespace ChickNet.UnitTests.GateTests
+﻿namespace ChickNet.UnitTests.GateTests
 {
     public class MockSelectorBuilder
     {

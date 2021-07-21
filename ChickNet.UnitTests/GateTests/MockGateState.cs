@@ -1,4 +1,4 @@
-﻿using ChickNet.Gate;
+﻿using ChickNetWeb.Gate;
 
 namespace ChickNet.UnitTests.GateTests
 {

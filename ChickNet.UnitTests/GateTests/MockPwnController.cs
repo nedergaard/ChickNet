@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ChickNet.Gate;
+using ChickNetWeb.Pwm;
 
 namespace ChickNet.UnitTests.GateTests
 {

@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="GateTests\**" />
     <Compile Remove="Properties\**" />
-    <EmbeddedResource Remove="GateTests\**" />
     <EmbeddedResource Remove="Properties\**" />
-    <None Remove="GateTests\**" />
     <None Remove="Properties\**" />
   </ItemGroup>
 

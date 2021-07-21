@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using ChickNet.Gate;
+using ChickNetWeb.Gate;
 using Moq;
 
 namespace ChickNet.UnitTests.GateTests

@@ -1,5 +1,5 @@
 ﻿using System;
-using ChickNet.Gate;
+using ChickNetWeb.Selection;
 
 namespace ChickNet.UnitTests.GateTests
 {
