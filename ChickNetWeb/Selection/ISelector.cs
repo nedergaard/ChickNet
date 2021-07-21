@@ -1,4 +1,4 @@
-﻿namespace ChickNet.Gate
+﻿namespace ChickNetWeb.Selection
 {
     /// <summary>
     /// Selector

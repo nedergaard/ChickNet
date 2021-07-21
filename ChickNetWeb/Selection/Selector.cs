@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Device.Gpio;
 using System.Linq;
-using Windows.Devices.Gpio;
-using ChickNet.Gate;
 
-namespace ChickNet.Selection
+namespace ChickNetWeb.Selection
 {
     public class Selector : ISelector
     {
@@ -28,7 +27,7 @@ namespace ChickNet.Selection
         {
             for (var pinIndex = 0; pinIndex < _pins.Count; pinIndex++)
             {
-                _pins[pinIndex].Write((1 << pinIndex & itemNr) > 0 ? GpioPinValue.High : GpioPinValue.Low);
+                _pins[pinIndex].Write((1 << pinIndex & itemNr) > 0 ? PinValue.High : PinValue.Low);
             }
 
             Selected = itemNr;
@@ -39,8 +38,8 @@ namespace ChickNet.Selection
 
     public interface IPin
     {
-        GpioPinValue Read();
+        PinValue Read();
 
-        void Write(GpioPinValue newValue);
+        void Write(PinValue newValue);
     }
 }

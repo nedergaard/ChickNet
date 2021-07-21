@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Device.Gpio;
 using System.Linq;
-using Windows.Devices.Gpio;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
-using ChickNet.Selection;
+using ChickNetWeb.Selection;
 using FluentAssertions;
 using Xunit;
-using Xunit.Sdk;
 
 namespace ChickNet.UnitTests.SelectionTests
 {
@@ -97,20 +95,20 @@ namespace ChickNet.UnitTests.SelectionTests
 
         public ListFakePinBuilder WithLowPin()
         {
-            return WithPin(GpioPinValue.Low);
+            return WithPin(PinValue.Low);
         }
 
         public ListFakePinBuilder WithHighPin()
         {
-            return WithPin(GpioPinValue.High);
+            return WithPin(PinValue.High);
         }
 
         public ListFakePinBuilder WithPin(bool isHigh)
         {
-            return WithPin(isHigh ? GpioPinValue.High : GpioPinValue.Low);
+            return WithPin(isHigh ? PinValue.High : PinValue.Low);
         }
 
-        public ListFakePinBuilder WithPin(GpioPinValue currentValue)
+        public ListFakePinBuilder WithPin(PinValue currentValue)
         {
             _result.Add(new FakePin { CurrrentPinValue = currentValue });
 

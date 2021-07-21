@@ -1,22 +1,22 @@
-﻿using Windows.Devices.Gpio;
-using ChickNet.Selection;
+﻿using ChickNetWeb.Selection;
+using System.Device.Gpio;
 
 namespace ChickNet.UnitTests.SelectionTests
 {
     public class FakePin : IPin
     {
-        public GpioPinValue CurrrentPinValue { get; set; }
+        public PinValue CurrrentPinValue { get; set; }
 
         #region Implementation of IPin
 
         /// <inheritdoc />
-        public GpioPinValue Read()
+        public PinValue Read()
         {
             return CurrrentPinValue;
         }
 
         /// <inheritdoc />
-        public void Write(GpioPinValue newValue)
+        public void Write(PinValue newValue)
         {
             CurrrentPinValue = newValue;
         }
