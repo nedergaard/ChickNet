@@ -1,4 +1,4 @@
-﻿namespace ChickNet.Gate
+﻿namespace ChickNetWeb.Gate
 {
     public interface IGateStates
     {

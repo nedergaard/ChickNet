@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace ChickNet.Gate
+namespace ChickNetWeb.Gate
 {
     public class GateStates : IGateStates
     {

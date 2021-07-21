@@ -1,7 +1,7 @@
-﻿using Windows.Devices.Gpio;
-using ChickNet.Selection;
+﻿using ChickNetWeb.Selection;
+using System.Device.Gpio;
 
-namespace ChickNet.Gate
+namespace ChickNetWeb.Gate
 {
     public class GateState : IGateState
     {
@@ -18,13 +18,13 @@ namespace ChickNet.Gate
 
         /// <inheritdoc />
         public bool IsOpen => 
-            _closedSwitchPin.Read() == GpioPinValue.High 
-            && _openSwitchPin.Read() == GpioPinValue.High;
+            _closedSwitchPin.Read() == PinValue.High 
+            && _openSwitchPin.Read() == PinValue.High;
 
         /// <inheritdoc />
         public bool IsClosed =>
-            _closedSwitchPin.Read() == GpioPinValue.Low 
-            && _openSwitchPin.Read() == GpioPinValue.Low;
+            _closedSwitchPin.Read() == PinValue.Low 
+            && _openSwitchPin.Read() == PinValue.Low;
 
         #endregion
     }

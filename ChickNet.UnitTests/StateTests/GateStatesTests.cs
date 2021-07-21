@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Devices.Gpio;
-using ChickNet.Gate;
-using ChickNet.Selection;
-using ChickNet.UnitTests.GateTests;
+using ChickNetWeb.Gate;
 using FluentAssertions;
 using Moq;
 using Xunit;

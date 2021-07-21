@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Devices.Gpio;
-using Windows.Media;
-using ChickNet.Gate;
-using ChickNet.Selection;
-using ChickNet.UnitTests.GateTests;
-using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Device.Gpio;
+using ChickNetWeb.Gate;
+using ChickNetWeb.Selection;
 using Moq;
 using Xunit;
 
@@ -16,18 +9,26 @@ namespace ChickNet.UnitTests.StateTests
 {
     public class GateStateTests
     {
+        public static IEnumerable<object[]> Get_IsOpen_TestData =>
+            new List<object[]>
+            {
+                // Low indicates the switch is closed, i.e. the gate is next to the switch.
+
+                // Gate is closed
+                new object[] { PinValue.Low, PinValue.Low, false },
+                // Gate is half open
+                new object[] { PinValue.High, PinValue.Low, false },
+                // Gate is fully open, none of the switches are activated
+                new object[] { PinValue.High, PinValue.High, true },
+                // "Impossible" state
+                new object[] { PinValue.Low, PinValue.High, false },
+            };
+
         // [UnitOfWork_StateUnderTest_ExpectedBehavior]
-        // Low indicates the switch is closed, i.e. the gate is next to the switch.
         [Theory]
         // Gate is closed
-        [InlineData(GpioPinValue.Low, GpioPinValue.Low, false)]
-        // Gate is half open
-        [InlineData(GpioPinValue.High, GpioPinValue.Low, false)]
-        // Gate is fully open, none of the switches are activated
-        [InlineData(GpioPinValue.High, GpioPinValue.High, true)]
-        // "Impossible" state
-        [InlineData(GpioPinValue.Low, GpioPinValue.High, false)]
-        public void IsOpen_GateClosed_ReturnsExpected(GpioPinValue closedPinValue, GpioPinValue openPinValue, bool expected)
+        [MemberData(nameof(Get_IsOpen_TestData))]
+        public void IsOpen_GateClosed_ReturnsExpected(PinValue closedPinValue, PinValue openPinValue, bool expected)
         {
             // Arrange
             var closedSwithPin = new Mock<IPin>();
@@ -49,16 +50,24 @@ namespace ChickNet.UnitTests.StateTests
             Assert.Equal(expected, actual);
         }
 
+        public static IEnumerable<object[]> Get_IsClosed_TestData =>
+            new List<object[]>
+            {
+                // Low indicates the switch is closed, i.e. the gate is next to the switch.
+
+                // Gate is closed
+                new object[] { PinValue.Low, PinValue.Low, true },
+                // Gate is half open
+                new object[] { PinValue.High, PinValue.Low, false },
+                // Gate is fully open, none of the switches are activated
+                new object[] { PinValue.High, PinValue.High, false },
+                // "Impossible" state
+                new object[] { PinValue.Low, PinValue.High, false },
+            };
+
         [Theory]
-        // Gate is closed
-        [InlineData(GpioPinValue.Low, GpioPinValue.Low, true)]
-        // Gate is half open
-        [InlineData(GpioPinValue.High, GpioPinValue.Low, false)]
-        // Gate is fully open, none of the switches are activated
-        [InlineData(GpioPinValue.High, GpioPinValue.High, false)]
-        // "Impossible" state
-        [InlineData(GpioPinValue.Low, GpioPinValue.High, false)]
-        public void IsClosed_GateClosed_ReturnsExpected(GpioPinValue closedPinValue, GpioPinValue openPinValue, bool expected)
+        [MemberData(nameof(Get_IsClosed_TestData))]
+        public void IsClosed_GateClosed_ReturnsExpected(PinValue closedPinValue, PinValue openPinValue, bool expected)
         {
             // Arrange
             var closedSwithPin = new Mock<IPin>();
