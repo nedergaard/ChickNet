@@ -34,7 +34,7 @@ namespace ChickNet.Gate
             // Accelerate motor
             await _pwmController.ChangeDutyCyclePercentAsync(100);
 
-            var timeOutTime = DateTime.Now.AddSeconds(20);
+            var timeOutTime = DateTime.Now.AddSeconds(60);
             // Wait for gate to be fully open
             while (!IsOpen() && DateTime.Now < timeOutTime)
             {
@@ -61,7 +61,7 @@ namespace ChickNet.Gate
             await _pwmController.SetDirectionAsync(Direction.Backward);
             await _pwmController.ChangeDutyCyclePercentAsync(100);
 
-            var timeOutTime = DateTime.Now.AddSeconds(20);
+            var timeOutTime = DateTime.Now.AddSeconds(60);
             // Wait for gate to be fully open
             while (!IsClosed() && DateTime.Now < timeOutTime)
             {
