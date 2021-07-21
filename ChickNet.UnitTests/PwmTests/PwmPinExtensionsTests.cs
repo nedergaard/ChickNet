@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ChickNet.Pwm;
+using ChickNetWeb.Pwm;
 using FluentAssertions;
 using Moq;
 using Xunit;

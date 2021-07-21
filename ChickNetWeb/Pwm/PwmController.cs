@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ChickNet.Gate;
 
-namespace ChickNet.Pwm
+namespace ChickNetWeb.Pwm
 {
     public class PwmController : IPwmController
     {

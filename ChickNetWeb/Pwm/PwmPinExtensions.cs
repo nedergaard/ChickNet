@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ChickNet.Pwm
+namespace ChickNetWeb.Pwm
 {
     public static class PwmPinExtensions
     {
@@ -14,7 +14,7 @@ namespace ChickNet.Pwm
             int stepsPerChange = 6, int delayPerStepMs = 80)
         {
             var dutyCycleChange = targetDutyCycle - pwmPin.CurrentDutyCyclePercent;
-            
+
             // Adjust stepsPerChange if each step would be less than 1
             stepsPerChange = Math.Min(stepsPerChange, Math.Abs(dutyCycleChange));
 

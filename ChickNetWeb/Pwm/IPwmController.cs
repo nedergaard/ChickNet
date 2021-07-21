@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace ChickNet.Gate
+namespace ChickNetWeb.Pwm
 {
     /// <summary>
     /// Controller for Pulse Width Modulation outputs
@@ -24,7 +23,7 @@ namespace ChickNet.Gate
         /// Steps duty cycle to 0 rapidly
         /// </summary>
         Task StopAsync();
-        
+
         // EmergencyStop()  Sets Duty cycle to 0 immediately
     }
 
