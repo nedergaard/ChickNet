@@ -79,7 +79,7 @@ namespace ChickNetWeb
             GateController =
                 new GateController(
                     // TODO : pins in settings, selector: 6, 13, 19
-                    new Selector(GetOutputPins(6, 13, 19)),
+                    new Selector(GetOutputPins(5, 6, 19)),
                     // TODO : Make sure the prototype and PCB uses the pins that these channels uses.
                     new PwmController(
                         GetPwmChannel(0),
