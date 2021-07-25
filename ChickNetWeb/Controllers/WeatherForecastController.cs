@@ -32,25 +32,6 @@ namespace ChickNetWeb.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-            const int LedPinNumber = 24;
-            const int ButtonPinNumber = 4;
-
-            GpioController controller = new GpioController(PinNumberingScheme.Logical);
-
-            controller.OpenPin(ButtonPinNumber, PinMode.InputPullUp);
-            controller.OpenPin(LedPinNumber, PinMode.Output);
-
-            var blinkCount = 0;
-            bool heartBeat = false;
-            while (controller.Read(ButtonPinNumber) == PinValue.High
-                && blinkCount++ < 30)
-            {
-                heartBeat = !heartBeat;
-                controller.Write(LedPinNumber, heartBeat ? PinValue.High : PinValue.Low);
-                Thread.Sleep(500);
-            }
-
-
             var rng = new Random();
             return
                 Enumerable

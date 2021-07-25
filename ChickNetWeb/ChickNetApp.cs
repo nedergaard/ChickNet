@@ -3,6 +3,7 @@ using ChickNetWeb.Hardware;
 using ChickNetWeb.Pwm;
 using ChickNetWeb.Selection;
 using Iot.Device.Board;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Device.Gpio;
@@ -12,9 +13,11 @@ using System.Threading.Tasks;
 
 namespace ChickNetWeb
 {
-    public class ChickNetApp : IDisposable
+    public class ChickNetApp : BackgroundService
     {
         public GateController GateController { get; private set; }
+
+        private Board _board;
 
         private GpioController _gpioController;
 
@@ -30,9 +33,17 @@ namespace ChickNetWeb
             _disposables = new List<IDisposable>();
         }
 
-        public async Task InitializeHardware()
+        public override Task StartAsync(CancellationToken cancellationToken)
         {
-            var board = new RaspberryPiBoard();
+            InitializeHardware();
+
+            return base.StartAsync(cancellationToken);
+        }
+
+
+        public void InitializeHardware()
+        {
+            _board = new RaspberryPiBoard();
 
             _gpioController = new GpioController(PinNumberingScheme.Logical);
 
@@ -63,7 +74,7 @@ namespace ChickNetWeb
 
             IPwmPin GetPwmChannel(int channelNr)
             {
-                var pwmChannel = board.CreatePwmChannel(0, channelNr, dutyCyclePercentage: 0);
+                var pwmChannel = _board.CreatePwmChannel(0, channelNr, dutyCyclePercentage: 0);
                 _disposables.Add(pwmChannel);
                 return new PwmChannelWrapper(pwmChannel);
             }
@@ -90,23 +101,23 @@ namespace ChickNetWeb
 
             // TODO : pins in settings: 24
             _heartBeatPin = GetOutputPins(24).First();
-            _heartBeatTimer = new Timer(HandleHeartBeat, _heartBeatState, 100, Timeout.Infinite);
         }
-
 
         #region Heart beat
 
-        private Timer _heartBeatTimer;
-        private object _heartBeatState;
         private IPin _heartBeatPin;
-        private bool _heartBeat;
 
-        private void HandleHeartBeat(object state)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _heartBeat = !_heartBeat;
-            _heartBeatPin.Write(_heartBeat ? PinValue.High : PinValue.Low);
+            bool _heartBeat = false;
 
-            _heartBeatTimer.Change(500, Timeout.Infinite);
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                _heartBeat = !_heartBeat;
+                _heartBeatPin.Write(_heartBeat ? PinValue.High : PinValue.Low);
+
+                await Task.Delay(500, stoppingToken);
+            }
         }
 
         #endregion
@@ -133,16 +144,19 @@ namespace ChickNetWeb
                     }
                 }
 
-                _heartBeatTimer.Dispose();
-                _heartBeatTimer = null;
-                _heartBeatPin.Write(PinValue.Low);
+                _board?.Dispose();
+                _board = null;
+
+                _heartBeatPin?.Write(PinValue.Low);
             }
 
             _isDisposed = true;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
+
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
