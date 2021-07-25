@@ -32,6 +32,14 @@ namespace ChickNetWeb
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChickNetWeb", Version = "v1" });
             });
+
+            // Auto registration. Wohu! 
+            services.Scan(scan =>
+                scan.FromCallingAssembly()
+                    //.AddClasses(classes => classes.
+
+                    .AddClasses()
+                    .AsImplementedInterfaces());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

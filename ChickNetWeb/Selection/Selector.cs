@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ChickNetWeb.Hardware;
+using System.Collections.Generic;
 using System.Device.Gpio;
 using System.Linq;
 
@@ -34,12 +35,5 @@ namespace ChickNetWeb.Selection
         }
 
         #endregion
-    }
-
-    public interface IPin
-    {
-        PinValue Read();
-
-        void Write(PinValue newValue);
     }
 }
