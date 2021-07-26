@@ -19,14 +19,17 @@ namespace ChickNetWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChickNetWeb", Version = "v1" });
             });
 
-            services.AddHostedService<ChickNetApp>();
+            // Not using AddHostedService as that adds the background service as a transient that we cannot reach in our code.
+            // Adding it instead as a Singleton that we can access.
+            // See https://github.com/dotnet/extensions/issues/553
+            services.AddSingleton<ChickNetApp>();
+            services.AddSingleton<IHostedService>(provider => provider.GetService<ChickNetApp>());
 
             // Auto registration. Wohu! 
             services.Scan(scan =>
